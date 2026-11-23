@@ -43,6 +43,9 @@ def main():
         with os.fdopen(fd, "wb") as out:
             with open(source, "rb") as src:
                 shutil.copyfileobj(src, out)
+        # mkstemp creates the temp file mode 0600; make it world-readable
+        # before the rename so the grader (a different user) can read it.
+        os.chmod(tmp, 0o644)
         os.replace(tmp, target)
     except BaseException:
         try:
